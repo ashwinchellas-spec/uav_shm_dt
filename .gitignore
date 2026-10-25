@@ -1,0 +1,8 @@
+*.asv
+*.mex*
+octave-workspace
+results/doe/*_chunk*.mat
+results/doe/shm_database.mat
+results/doe/worker*.log
+results/doe/*.log
+results/features/raw_features.mat

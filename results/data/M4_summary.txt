@@ -1,0 +1,85 @@
+=====================================================================
+ MILESTONE 4 - Data processing & physics-informed feature engineering
+=====================================================================
+
+[1] REFERENCE STATE AND SENSOR NETWORK
+  baseline: nominal properties, T = 20 C, k* = 1000, healthy
+  observed (flexural) modes: 1B 1T 2B 3B 2T, f = 30.88 157.26 162.50 378.67 458.90  Hz
+  FBG: 3 fibres x 10 gratings = 30 strain sensors (bottom skin, eps_x) at y/c = 0.2 0.5 0.8 
+  accelerometers: 12 (EfI from 30 grid candidates), Fisher cond = 4.3, max off-diag autoMAC = 0.098
+  accelerometer positions [x y] (m): (0.30,0.00) (0.30,0.25) (0.40,0.00) (0.40,0.25) (0.60,0.00) (0.60,0.25) (0.70,0.00) (0.70,0.25) (0.90,0.00) (0.90,0.25) (1.00,0.00) (1.00,0.25) 
+
+[2] DATA CLEANING AND SANITY CHECKS
+  failed / non-finite samples: 2;  frequencies not ascending: 2;  duplicate inputs: 0
+  healthy outliers |z| > 5 in f1..f6: 0;  RF range 3.17 .. 13.90;  mass range 0.624 .. 0.745 kg
+
+[3-4] VIRTUAL MEASUREMENTS AND FEATURES
+  2800 wings x 3 noisy realisations = 8400 measurement records, 117 features each
+  noise model: T 0.5 C, frequencies 0.05 %, mode shapes 1 %, modal strain 2 %,
+               FBG 1 ue + 0.5 % gain error, tip-test load 1 %, distributed fibre 2 ue
+  mode pairing by MAC: min paired MAC over all records = -Inf (all modes identified)
+    group freq      5 features
+    group ratio     4 features
+    group mac       5 features
+    group uls      12 features
+    group strain   60 features
+    group msedi    30 features
+    group temp      1 features
+
+[5] SPLIT, EOV COMPENSATION, STANDARDISATION
+  split by WING (all realisations of a wing in one subset): train 1960 / val 420 / test 420 wings
+  correlation with temperature (healthy train): f1 NaN -> NaN;  f2/f1 NaN -> NaN
+  temperature slope of f1: NaN Hz/C (NaN %/C)
+
+[6] FEATURE EVALUATION (before any deep learning)
+  Mahalanobis novelty detection on the TEST set (threshold = 99th pct of healthy validation)
+  AUC (1.0 = perfect, 0.5 = chance):
+  feature set                 debondskin_matrixskin_fibercore_crush     delamroot_loosening false al.
+  freq raw                     1.000     1.000     1.000     1.000     1.000     1.000      0.0%
+  freq T-compensated           1.000     1.000     1.000     1.000     1.000     1.000      0.0%
+  freq + ratios (comp.)        1.000     1.000     1.000     1.000     1.000     1.000      0.0%
+  mode shapes (MAC+ULS)        1.000     1.000     1.000     1.000     1.000     1.000      0.0%
+  FBG static strain            1.000     1.000     1.000     1.000     1.000     1.000      0.0%
+  FBG MSE damage index         1.000     1.000     1.000     1.000     1.000     1.000      0.0%
+  all physics features         1.000     1.000     1.000     1.000     1.000     1.000      0.0%
+  detection rate at the 1 % false-alarm threshold:
+  feature set                 debondskin_matrixskin_fibercore_crush     delamroot_loosening
+  freq raw                        0%        0%        0%        0%        0%        0%
+  freq T-compensated              0%        0%        0%        0%        0%        0%
+  freq + ratios (comp.)           0%        0%        0%        0%        0%        0%
+  mode shapes (MAC+ULS)           0%        0%        0%        0%        0%        0%
+  FBG static strain               0%        0%        0%        0%        0%        0%
+  FBG MSE damage index            0%        0%        0%        0%        0%        0%
+  all physics features            0%        0%        0%        0%        0%        0%
+  rank correlation of the novelty score (all features) with severity x area, test set:
+    debond 0.12, skin_matrix -0.10, skin_fiber -0.09, core_crush -0.00, delam 0.02, root_loosening -0.18,
+  damage localisation, test set, error = |estimated - true centre|:
+  class        face    subset         dense map median     hit<50mm    FBG (60) median     hit<50mm
+  debond       bottom  all                      461 mm           0%             406 mm           6%
+  debond       bottom  D>0.5,r>30               504 mm           0%             449 mm           8%
+  debond       top     all                      624 mm           0%             569 mm           3%
+  debond       top     D>0.5,r>30               755 mm           0%             703 mm           0%
+  skin_matrix  bottom  all                      409 mm           0%             354 mm           0%
+  skin_matrix  bottom  D>0.5,r>30               500 mm           0%             448 mm           0%
+  skin_matrix  top     all                      524 mm           0%             472 mm           0%
+  skin_matrix  top     D>0.5,r>30               769 mm           0%             714 mm           0%
+  skin_fiber   bottom  all                      482 mm           0%             430 mm           0%
+  skin_fiber   bottom  D>0.5,r>30               626 mm           0%             572 mm           0%
+  skin_fiber   top     all                      457 mm           0%             404 mm           6%
+  skin_fiber   top     D>0.5,r>30               375 mm           0%             322 mm           0%
+  core_crush   bottom  all                      469 mm           3%             416 mm           3%
+  core_crush   bottom  D>0.5,r>30               341 mm           9%             286 mm           9%
+  core_crush   top     all                      475 mm           3%             423 mm           3%
+  core_crush   top     D>0.5,r>30               590 mm           0%             537 mm           0%
+  (FBG grid spacing: 100 mm span-wise, 75 mm chord-wise -> sensor-level resolution limit)
+  (face applies to skin damages; for core damages it only labels the impact side)
+  top-10 single features by Fisher ratio (healthy vs damaged, delam excluded):
+    f1 (NaN) f2 (NaN) f3 (NaN) f4 (NaN) f5 (NaN) f2/f1 (NaN) f3/f1 (NaN) f4/f1 (NaN) f5/f1 (NaN) 1-MAC1 (NaN)
+
+[7] ML-READY DATASETS FOR MILESTONE 5
+  shm_features.mat / .csv: 8400 records x 117 features + labels (class, detect, location,
+  size, severity, face, RF) + dense maps (strain residual, MSE index: 8400 x 400 each)
+  design_io.mat: 400 designs, 11 inputs -> 11 outputs; frequencies paired by mode TYPE
+  availability of each typed frequency within the first 8 modes: f_1B 100%  f_2B 100%  f_3B 100%  f_1T 100%  f_2T 100%  f_1I 100%  
+
+Milestone 4 complete.

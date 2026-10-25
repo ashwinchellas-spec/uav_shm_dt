@@ -1,0 +1,81 @@
+=====================================================================
+ MILESTONE 2 - FSDT solver results for UAV-W1 baseline semi-wing
+=====================================================================
+
+[A] MESH CONVERGENCE (LC4 critical gust, tip mid-chord deflection; f1..f6)
+    8x2   (  135 DOF): w_tip = 5.87104 mm  f = [31.066 163.618 167.546 210.187 404.338 483.853 ] Hz  TW_max = 0.0565  TW(x=50mm) = NaN
+   16x4   (  425 DOF): w_tip = 5.88375 mm  f = [30.971 159.034 163.763 201.006 384.431 465.421 ] Hz  TW_max = 0.0617  TW(x=50mm) = 0.0594
+   32x8   ( 1485 DOF): w_tip = 5.89104 mm  f = [30.937 157.498 162.795 198.458 379.462 459.718 ] Hz  TW_max = 0.0690  TW(x=50mm) = 0.0592
+   64x16  ( 5525 DOF): w_tip = 5.89443 mm  f = [30.924 157.067 162.544 197.763 378.214 458.164 ] Hz  TW_max = 0.0793  TW(x=50mm) = 0.0595
+   40x10  ( 2255 DOF): w_tip = 5.89244 mm  f = [30.931 157.294 162.676 198.131 378.864 458.982 ] Hz  TW_max = 0.0719  TW(x=50mm) = 0.0593
+  Richardson (16x4, 32x8, 64x16):
+    w_tip       observed order p =  1.11, extrapolated =     5.8974 mm  baseline 40x10 error = 0.083 %
+    f1          observed order p =  1.46, extrapolated =     30.917 Hz  baseline 40x10 error = 0.046 %
+    f2          observed order p =  1.83, extrapolated =      156.9 Hz  baseline 40x10 error = 0.252 %
+    f3          observed order p =  1.94, extrapolated =     162.46 Hz  baseline 40x10 error = 0.136 %
+    f4          observed order p =  1.87, extrapolated =      197.5 Hz  baseline 40x10 error = 0.319 %
+    f5          observed order p =  1.99, extrapolated =     377.79 Hz  baseline 40x10 error = 0.283 %
+    f6          observed order p =  1.88, extrapolated =     457.58 Hz  baseline 40x10 error = 0.306 %
+    TW_max      observed order p = -0.51, extrapolated =   0.044587 -   baseline 40x10 error = 61.354 %
+    TW(x=50mm)  observed order p = -0.40, extrapolated =   0.058411 -   baseline 40x10 error = 1.547 %
+  NOTE: TW_max sits at the clamped trailing-edge root corner, where a clamped
+  and a free edge meet: plate theory predicts a stress singularity there, so the
+  peak grows with refinement (negative observed order). Design values are
+  therefore read at x = 50 mm (about 2h from the root), which converges.
+
+[B] STATIC ANALYSIS, mesh 40x10 (2255 DOF)
+  case                     n   wLE[mm]   wMC[mm]   wTE[mm]    twist    ex_max    ex_min   TsaiWu   Hashin   Core-S     ILSS
+                                                              [deg]      [ue]      [ue]    index    index    index    index
+  LC1_cruise_1g         1.00     1.227     1.153     1.078    0.034      54.9     -54.9   0.0141   0.0136   0.0084   0.0083
+  LC2_manoeuvre_pos     3.80     4.664     4.380     4.098    0.130     208.6    -208.6   0.0535   0.0516   0.0318   0.0315
+  LC3_manoeuvre_neg    -1.50    -1.841    -1.729    -1.618   -0.051      82.3     -82.3   0.0211   0.0204   0.0126   0.0124
+  LC4_gust_critical     5.11     6.275     5.892     5.513    0.175     280.6    -280.6   0.0719   0.0694   0.0428   0.0423
+  LC5_ultimate          7.67     9.413     8.839     8.270    0.262     420.9    -420.9   0.1079   0.1041   0.0642   0.0635
+  LC6_tip_test          0.00     7.789     7.896     7.780    0.002     264.5    -264.5   0.0667   0.0646   0.0617   0.0610
+  global equilibrium |sum(Rz) + sum(Fz)| / |sum(Fz)| (max over cases) = 5.04e-13
+  ULTIMATE (LC5, n = 7.67):
+    Tsai-Wu  max 0.1079 -> reserve factor RF = 9.27  (ply 4, +90 deg, element at x=0.013, y=0.237 m)
+    Hashin   max 0.1041 -> RF = 9.61, governing mode: matrix tension (ply 4)
+    core shear index 0.0642 -> RF = 15.57;  interlaminar index 0.0635 -> RF = 15.75
+    Tsai-Wu at x = 50 mm (converged design value) 0.0890 -> RF = 11.24
+    -> minimum RF (corner peak incl.) = 9.27  (RF > 1 required at ultimate load)
+
+[C] TRANSVERSE-SHEAR CONTRIBUTION (LC4, tip mid-chord deflection; f1)
+  FSDT, k energy (used)    w_tip =   5.8924 mm ( 100.0 %)   f1 =  30.931 Hz ( 100.0 %)
+  FSDT, k = 5/6            w_tip =   5.5290 mm (  93.8 %)   f1 =  32.025 Hz ( 103.5 %)
+  shear-rigid (~ CLT)      w_tip =   5.4242 mm (  92.1 %)   f1 =  32.347 Hz ( 104.6 %)
+
+[D] MODAL ANALYSIS (10 modes)
+  mode     f [Hz]     type   energy fractions [bend tors chord in-plane]
+     1     30.931       1B   [1.00 0.00 0.00 0.00]
+     2    157.294       1T   [0.00 1.00 0.00 0.00]
+     3    162.676       2B   [1.00 0.00 0.00 0.00]
+     4    198.131 in-plane   [0.00 0.00 0.00 1.00]
+     5    378.864       3B   [1.00 0.00 0.00 0.00]
+     6    458.982       2T   [0.00 1.00 0.00 0.00]
+     7    618.110       4B   [1.00 0.00 0.00 0.00]
+     8    729.122       3T   [0.00 1.00 0.00 0.00]
+     9    866.213       5B   [1.00 0.00 0.00 0.00]
+    10    967.117       4T   [0.00 0.99 0.01 0.00]
+  M-orthonormality: max |Phi'M Phi - I| = 8.77e-16
+  K-check: max |Phi'K Phi - diag(w^2)| / w_max^2 = 8.93e-15
+
+[E] DYNAMIC 1-COS GUST RESPONSE (Newmark average acceleration)
+  gust at V = 32.0 m/s, H = 3.125 m, duration t_g = 0.195 s (5.12 Hz), f1 = 30.93 Hz, t_g/T1 = 6.0
+  Rayleigh alpha = 7.1871 1/s, beta = 1.554e-05 s (zeta = 2 % at modes 1 & 5)
+  peak tip deflection (1g + gust) = 6.008 mm, dynamic amplification factor = 1.024
+  peak tip acceleration = 4.58 m/s^2 (0.47 g)
+  DAF vs t_g/T1: 0.25->0.729  0.50->1.333  0.75->1.619  1.00->1.686  1.50->1.544  2.00->1.322  3.00->1.011  5.00->1.006  8.00->1.013  
+
+[F] DAMAGE SENSITIVITY (bridge to Milestone 3)
+  damage           D  nel  frequency shift df/f [%] modes 1..6   dw_tip[%]  min MAC
+  debond        0.90   12  [ -0.287  -0.151  -1.142   0.000  -0.341  -0.707 ]      0.4987  0.99930
+  skin_matrix   0.50   12  [ -0.067  -0.082  -0.022  -0.019  -0.031  -0.004 ]      0.1289  0.99969
+  skin_fiber    0.50   12  [ -0.522  -0.349  -0.030  -0.087  -0.035  -0.189 ]      1.0531  0.99478
+  core_crush    0.80   10  [ -0.120  -0.550  -0.117  -0.006  -0.611  -1.368 ]      0.2670  0.96953
+
+[G] COMPUTATIONAL COST (this machine, MATLAB)
+  assembly 0.105 s, 6 static load cases 0.027 s, 10 modes 0.057 s, Newmark 2401 steps 3.37 s
+  unique element matrices computed: 1 of 400 elements (cache)
+
+Milestone 2 wing analysis complete.

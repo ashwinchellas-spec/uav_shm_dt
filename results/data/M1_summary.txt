@@ -1,0 +1,63 @@
+=====================================================================
+ MILESTONE 1 - Problem definition: UAV-W1 baseline semi-wing
+=====================================================================
+
+[1] GEOMETRY
+  semi-span b = 1.000 m, root chord = 0.250 m, taper = 1.00, LE sweep = 0.0 deg
+  airfoil NACA0012 (t/c = 0.12), full wing area S = 0.500 m^2, AR = 8.00
+
+[2] EQUIVALENT SANDWICH DEPTH (NACA 0012)
+  max thickness t_max = 30.00 mm, mean thickness = 20.55 mm
+  bending-equivalent face distance d_eq = 22.26 mm
+  model: core 21.75 mm + face 0.500 mm -> d = 22.25 mm (99.9 % of d_eq)
+
+[3] LAMINATE (bottom -> top)
+  +0 +45 -45 +90 [CORE 21.75mm] +90 -45 +45 +0 
+  total thickness h = 22.750 mm, areal mass I0 = 2.731 kg/m^2
+  semi-wing structural mass = 0.683 kg (22.8 % of MTOW for both wings)
+  A [MN/m]:
+       78.1608    23.1451     0.0000
+       23.1451    78.1608     0.0000
+        0.0000     0.0000    27.4024
+  B [N]   : max |B_ij| = 3.638e-11  (symmetric laminate -> 0)
+  D [N m]:
+     9703.1587  2819.3766    29.8054
+     2819.3766  9345.4935    29.8054
+       29.8054    29.8054  3347.7036
+  As (k energy) [MN/m]:  [0.5564 0.0000; 0.0000 0.5360]
+  shear correction (energy method): kx = 0.0954, ky = 0.0919   (homogeneous: 0.8333)
+  face membrane moduli Ex = 69.68 GPa, Ey = 69.68 GPa (quasi-isotropic)
+  sandwich theory D11 = 8623.46, D22 = 8623.46 N m  vs CLT 9703.16, 9345.49 N m
+  sandwich theory shear stiffness  G_c d^2/t_c = 0.5463 MN/m
+     FSDT, k from energy method    As11        = 0.5564 MN/m  (ratio 1.019)
+     FSDT, k = 5/6                 As11        = 4.8627 MN/m  (ratio 8.9  <-- wrong)
+  solid 8-ply [0/45/-45/90]s laminate for comparison: kx = 0.7639, ky = 0.7998
+
+[4] FLIGHT ENVELOPE (V-n)
+  W = 58.86 N, W/S = 117.7 N/m^2, V_S1 = 12.66 m/s, V_A = 24.67 m/s, V_C = 25.0, V_D = 32.0 m/s
+  lift slope a = 4.906 /rad, mass ratio mu = 15.97, gust alleviation Kg = 0.661
+  gust dn at V_C (15.24 m/s) = 6.43, at V_D (7.62 m/s) = 4.11
+    Manoeuvre +n (V_A..V_D)    V =  24.7 m/s   n =  +3.80
+    Manoeuvre -n               V =  25.0 m/s   n =  -1.50
+    Gust +Ude at V_C           V =  25.0 m/s   n =  +3.90
+    Gust +Ude at V_D           V =  32.0 m/s   n =  +5.11
+    Gust -Ude at V_C           V =  25.0 m/s   n =  -3.25
+    Gust -Ude at V_D           V =  32.0 m/s   n =  -3.11
+  >> design limit load factors: n+ = 5.11 (Gust +Ude at V_D),  n- = -3.25 (Gust -Ude at V_C)
+
+[5] LOAD CASES (root reactions, from the consistent nodal loads)
+  case                       n     Fz [N]  Mx_root[Nm] T(mid-c)[Nm]
+  LC1_cruise_1g           1.00      22.73       10.254        1.839
+  LC2_manoeuvre_pos       3.80      86.38       38.965        6.989
+  LC3_manoeuvre_neg      -1.50     -34.10      -15.381       -2.759
+  LC4_gust_critical       5.11     116.22       52.424        9.404
+  LC5_ultimate            7.67     174.33       78.636       14.106
+  LC6_tip_test            0.00      50.00       50.000        0.000
+  (torque positive nose-up; lift acts at quarter chord, ahead of mid-chord)
+
+[6] FINITE-ELEMENT MODEL
+  Q4 FSDT elements: 40 x 10 = 400, nodes = 451, DOFs = 2255 (free 2200)
+  element size 25.0 x 25.0 mm, element a/h = 1.10, shear = hr, BC = clamped_root
+  semi-wing mass from consistent M (r_z' M r_z): 0.6828 kg
+
+Milestone 1 complete. Figures in results/figures/M1_*.png

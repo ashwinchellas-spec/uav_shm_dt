@@ -1,0 +1,120 @@
+=====================================================================
+ MILESTONE 3 - Design of Experiments & high-fidelity simulation database
+=====================================================================
+
+[A] SAMPLE PLAN
+  SHM tier   : 2800 samples = 7 classes x 400, 18 variables (stratified maximin-LHS)
+  design tier: 400 healthy designs, 11 variables
+  variable                   lower    upper    scale  group
+  E1 [-]                     0.95     1.05     lin    material
+  E2 [-]                     0.92     1.08     lin    material
+  G12 [-]                    0.92     1.08     lin    material
+  Gc [-]                     0.85     1.15     lin    material
+  Ec [-]                     0.85     1.15     lin    material
+  rho_f [-]                  0.97     1.03     lin    material
+  rho_c [-]                  0.9      1.1      lin    material
+  tply [-]                   0.95     1.05     lin    geometry
+  tcore [-]                  0.97     1.03     lin    geometry
+  dtheta [deg]               -2       2        lin    geometry
+  T [degC]                   -10      40       lin    environment
+  kroot [-]                  2.3      3.7      log    bc
+  dmg_x [x/L]                0.03     0.97     lin    damage
+  dmg_y [y/c]                0.12     0.88     lin    damage
+  dmg_r [m]                  0.015    0.06     lin    damage
+  dmg_ar [-]                 0.6      1.4      lin    damage
+  dmg_D [-]                  0.1      0.9      lin    damage
+  dmg_face [-]               0        1        lin    damage
+  space filling (mean over classes):  min distance LHS 0.803 vs random 0.708 (+13 %),
+                                      CD2 discrepancy LHS 0.3121 vs random 0.3585 (-13 %)
+
+[B] DATABASE QUALITY CHECKS
+  successful samples: 2798 / 2800 (SHM), 400 / 400 (design)
+  first failure: Out of memory.
+  run time per sample: SHM 0.35 s (median), design 7.05 s
+  max equilibrium error 1.0e-11, max eigen-residual 1.9e-11
+  nominal mode sequence: 1B 1T 2B 1I 3B 2T 4B 3T
+  SHM tier: samples whose first 6 modes are re-ordered (mode switching): 0.5 % healthy, 0.1 % all
+  design tier: 64.8 % of designs have a first-6-mode order different from the most common one
+  -> across designs mode order changes, so features must be paired by mode TYPE /
+     shape (MAC tracking, Milestone 4), never by index alone
+
+[C] MORRIS SCREENING (healthy wing, 20 trajectories = 260 runs)
+  mu* normalised by the largest factor of each output (1.00 = most influential):
+  factor        f1      f2      f3      f5      f6   w_tip   twist  RF_min
+  E1          0.92    0.29    0.59    0.28    0.24    0.67    0.29    0.58
+  E2          0.08    0.01    0.05    0.02    0.01    0.06    0.01    1.00
+  G12         0.14    0.07    0.09    0.04    0.06    0.10    0.07    0.08
+  Gc          0.23    1.00    1.00    1.00    1.00    0.15    1.00    0.06
+  Ec          0.02    0.00    0.01    0.01    0.00    0.02    0.00    0.01
+  rho_f       0.40    0.24    0.36    0.23    0.22    0.10    0.00    0.08
+  rho_c       0.95    0.56    0.85    0.55    0.52    0.24    0.00    0.18
+  tply        0.47    0.02    0.15    0.02    0.04    0.98    0.38    0.86
+  tcore       1.00    0.41    0.73    0.40    0.37    1.00    0.60    0.47
+  dtheta      0.01    0.00    0.01    0.01    0.00    0.01    0.03    0.02
+  T           0.40    0.54    0.62    0.52    0.52    0.29    0.54    0.19
+  kroot       0.15    0.01    0.08    0.03    0.01    0.12    0.01    0.00
+  f1 ranking: tcore > rho_c > E1 > tply > T
+  first-order Sobol indices (binned estimator, 400 healthy LHS samples):
+  factor        f1      f2      f3   w_tip
+  E1         0.000   0.000   0.000   0.000
+  E2         0.000   0.000   0.000   0.000
+  G12        0.000   0.000   0.000   0.000
+  Gc         0.000   0.000   0.000   0.000
+  Ec         0.000   0.000   0.000   0.000
+  rho_f      0.000   0.000   0.000   0.000
+  rho_c      0.000   0.000   0.000   0.000
+  tply       0.000   0.000   0.000   0.000
+  tcore      0.000   0.000   0.000   0.000
+  dtheta     0.000   0.000   0.000   0.000
+  T          0.000   0.000   0.000   0.000
+  kroot      0.000   0.000   0.000   0.000
+  sum        0.000   0.000   0.000   0.000
+
+[D] DAMAGE SIGNAL vs VARIABILITY
+  healthy variability (std of f_k, %): NaN NaN NaN NaN NaN NaN 
+  pure damage effect from paired healthy twins (|df/f| %, median / 90th pct, worst mode):
+    debond          median 0.328 %, 90th pct 1.294 %  -> median signal / EOV std = NaN
+    skin_matrix     median 0.028 %, 90th pct 0.119 %  -> median signal / EOV std = NaN
+    skin_fiber      median 0.106 %, 90th pct 0.538 %  -> median signal / EOV std = NaN
+    core_crush      median 0.106 %, 90th pct 0.391 %  -> median signal / EOV std = NaN
+    delam           median 0.000 %, 90th pct 0.000 %  -> median signal / EOV std = NaN
+    root_loosening  median 0.063 %, 90th pct 0.500 %  -> median signal / EOV std = NaN
+  frequency-only 3-sigma novelty test: false alarms 0.0 % (healthy), detections: debond 0 %, skin_matrix 0 %, skin_fiber 0 %, core_crush 0 %, delam 0 %, root_loosening 0 %,
+  local strain signal (paired twins, tip load): max|d eps_x| / max|eps_x|  [%]
+    debond          median   0.40 %, 90th pct   1.54 %
+    skin_matrix     median   0.89 %, 90th pct   3.37 %
+    skin_fiber      median   1.37 %, 90th pct  30.03 %
+    core_crush      median   0.22 %, 90th pct   0.56 %
+    delam           median   0.00 %, 90th pct   0.00 %
+    root_loosening  median   0.64 %, 90th pct   4.78 %
+  healthy strain variability (EOV) at the same load: median CoV NaN % per element
+  after removing one global scale factor per sample: median residual CoV NaN %
+  -> raw strain changes (0.2-1.4 % median) are below the raw EOV scatter (NaN %), but
+     EOV is almost a global scaling: the SHAPE of the field varies only NaN %, so local
+     damage patterns (debond NaNx, fibre NaNx, matrix NaNx, root NaNx that level) become
+     visible after spatial normalisation -> key design rule for Milestone 4 features
+  delamination inside a 0.5 mm face: no measurable global effect (|df/f| <= 2.0e-06) -
+     a physical detectability limit of low-frequency vibration / strain SHM
+  -> natural frequencies alone cannot detect most damage under EOV: the AI needs
+     physics-informed features (mode-shape curvature, strain fields) - Milestones 4-5
+
+[E] OUTPUT STATISTICS PER CLASS (mean +/- std)
+  class                    f1 [Hz]          f2 [Hz]          f3 [Hz]  w_tip 1g [mm]       RF_min  DAF_sharp
+  healthy              NaN+/-  NaN      NaN+/-  NaN      NaN+/-  NaN     NaN+/-  NaN    NaN+/- NaN   NaN
+  debond            30.874+/-0.732  157.116+/-5.102  162.390+/-4.249  1.1602+/-0.0665  11.36+/-1.31 1.686
+  skin_matrix       30.886+/-0.754  157.658+/-4.897  162.705+/-4.340  1.1594+/-0.0670  11.56+/-0.73 1.686
+  skin_fiber        30.857+/-0.727  157.555+/-4.752  162.597+/-4.173  1.1614+/-0.0632  11.36+/-1.08 1.686
+  core_crush        30.888+/-0.724  157.548+/-4.502  162.607+/-3.989  1.1592+/-0.0683  11.56+/-0.75 1.686
+  delam             30.894+/-0.706  157.684+/-4.548  162.727+/-3.978  1.1585+/-0.0621  11.58+/-0.74 1.686
+  root_loosening    30.825+/-0.753  157.653+/-4.932  162.513+/-4.335  1.1646+/-0.0710  11.54+/-0.73 1.686
+
+[G] DESIGN TIER (healthy wings across the design space)
+  T300_5208     n = 133   f1 =   8.95 ..  58.30 Hz   w_tip(1g) =   0.29 ..  20.65 mm   RF_min =  0.94 .. 24.27
+  AS4_3501_6    n = 134   f1 =   7.83 ..  55.27 Hz   w_tip(1g) =   0.38 ..  22.40 mm   RF_min =  1.69 .. 25.36
+  Eglass_epoxy  n = 133   f1 =   6.57 ..  28.00 Hz   w_tip(1g) =   1.13 ..  38.13 mm   RF_min =  0.77 .. 16.42
+  f1 first-order Sobol ranking: tcore_mm (0.40), face_mat (0.29), taper (0.08), th1 (0.05), th3 (0.05)
+
+[H] FILES
+  shm_database.mat 199 MB, design_database.mat 29 MB, *_scalars.csv, morris.mat, twins.mat
+
+Milestone 3 complete.

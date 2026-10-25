@@ -1,0 +1,65 @@
+| Test | Quantity | FE / computed | Reference | Rel. error | Tol. | Result |
+|---|---|---|---|---|---|---|
+| V01 element rank | zero modes, hr (expect 6) | 6 | 6 | 0.00e+00 | 0.0e+00 | PASS |
+| V01 element rank | zero modes, mitc4 (expect 6) | 6 | 6 | 0.00e+00 | 0.0e+00 | PASS |
+| V01 element rank | zero modes, sri (expect 6) | 8 | 6 | 3.33e-01 | - | info |
+| V01 element rank | zero modes, full (expect 6) | 6 | 6 | 0.00e+00 | 0.0e+00 | PASS |
+| V02 patch test | HR, a/h=240, max interior error | 2.36582e-11 | 0 | 2.37e-11 | 1.0e-08 | PASS |
+| V02 patch test | HR, a/h=12, max interior error | 7.9357e-14 | 0 | 7.94e-14 | 1.0e-08 | PASS |
+| V03 Navier static | w_bar a/h=4 FE vs Navier | 1.71046 | 1.70951 | 5.59e-04 | 5.0e-03 | PASS |
+| V03 Navier static | w_bar a/h=4 Navier vs Reddy | 1.70951 | 1.71 | 2.88e-04 | 1.0e-03 | PASS |
+| V03 Navier static | sx_bar a/h=4 FE vs Navier | 0.404737 | 0.405909 | 2.89e-03 | 2.0e-02 | PASS |
+| V03 Navier static | w_bar a/h=10 FE vs Navier | 0.662438 | 0.662712 | 4.12e-04 | 5.0e-03 | PASS |
+| V03 Navier static | w_bar a/h=10 Navier vs Reddy | 0.662712 | 0.6627 | 1.75e-05 | 1.0e-03 | PASS |
+| V03 Navier static | sx_bar a/h=10 FE vs Navier | 0.497522 | 0.498882 | 2.73e-03 | 2.0e-02 | PASS |
+| V03 Navier static | w_bar a/h=20 FE vs Navier | 0.490675 | 0.491174 | 1.01e-03 | 5.0e-03 | PASS |
+| V03 Navier static | w_bar a/h=20 Navier vs Reddy | 0.491174 | 0.4912 | 5.38e-05 | 1.0e-03 | PASS |
+| V03 Navier static | sx_bar a/h=20 FE vs Navier | 0.525945 | 0.527323 | 2.61e-03 | 2.0e-02 | PASS |
+| V03 Navier static | w_bar a/h=100 FE vs Navier | 0.433095 | 0.433676 | 1.34e-03 | 5.0e-03 | PASS |
+| V03 Navier static | w_bar a/h=100 Navier vs Reddy | 0.433676 | 0.4337 | 5.64e-05 | 1.0e-03 | PASS |
+| V03 Navier static | sx_bar a/h=100 FE vs Navier | 0.53684 | 0.53822 | 2.56e-03 | 2.0e-02 | PASS |
+| V03 Navier static | deflection convergence rate (expect ~2) | 1.98845 | 2 | 5.78e-03 | 1.5e-01 | PASS |
+| V04 Navier modal | symmetric [0/90/90/0] mode 1 (m,n)=(1,1) | 15.1584 | 15.1426 | 1.04e-03 | 1.5e-02 | PASS |
+| V04 Navier modal | symmetric [0/90/90/0] mode 2 (m,n)=(1,2) | 27.2549 | 27.1616 | 3.43e-03 | 1.5e-02 | PASS |
+| V04 Navier modal | symmetric [0/90/90/0] mode 3 (m,n)=(2,1) | 36.9504 | 36.8481 | 2.78e-03 | 1.5e-02 | PASS |
+| V04 Navier modal | symmetric [0/90/90/0] mode 4 (m,n)=(2,2) | 43.5555 | 43.4158 | 3.22e-03 | 1.5e-02 | PASS |
+| V04 Navier modal | symmetric [0/90/90/0] mode 5 (m,n)=(1,3) | 46.9771 | 46.6236 | 7.58e-03 | 1.5e-02 | PASS |
+| V04 Navier modal | symmetric [0/90/90/0] mode 6 (m,n)=(2,3) | 58.0974 | 57.7515 | 5.99e-03 | 1.5e-02 | PASS |
+| V04 Navier modal | antisymmetric [0/90] mode 1 (m,n)=(1,1) | 10.486 | 10.4731 | 1.23e-03 | 1.5e-02 | PASS |
+| V04 Navier modal | antisymmetric [0/90] mode 2 (m,n)=(1,2) | 25.7079 | 25.6081 | 3.89e-03 | 1.5e-02 | PASS |
+| V04 Navier modal | antisymmetric [0/90] mode 3 (m,n)=(2,1) | 25.7079 | 25.6081 | 3.89e-03 | 1.5e-02 | PASS |
+| V05 shear locking | HR   a/h=5  w/w_Navier | 0.999483 | 1 | 5.17e-04 | 1.0e-02 | PASS |
+| V05 shear locking | full a/h=5  w/w_Navier (locks) | 0.988029 | 1 | 1.20e-02 | - | info |
+| V05 shear locking | HR   a/h=100  w/w_Navier | 0.998737 | 1 | 1.26e-03 | 1.0e-02 | PASS |
+| V05 shear locking | full a/h=100  w/w_Navier (locks) | 0.150726 | 1 | 8.49e-01 | - | info |
+| V05 shear locking | HR   a/h=10000  w/w_Navier | 0.998735 | 1 | 1.27e-03 | 1.0e-02 | PASS |
+| V05 shear locking | full a/h=10000  w/w_Navier (locks) | 1.77316e-05 | 1 | 1.00e+00 | - | info |
+| V06 Leissa CFFF | lambda_1 (32x32) | 3.47174 | 3.4917 | 5.72e-03 | 1.0e-02 | PASS |
+| V06 Leissa CFFF | lambda_2 (32x32) | 8.50967 | 8.5246 | 1.75e-03 | 1.0e-02 | PASS |
+| V06 Leissa CFFF | lambda_3 (32x32) | 21.3334 | 21.429 | 4.46e-03 | 1.0e-02 | PASS |
+| V06 Leissa CFFF | lambda_4 (32x32) | 27.2419 | 27.331 | 3.26e-03 | 1.0e-02 | PASS |
+| V06 Leissa CFFF | lambda_5 (32x32) | 31.018 | 31.111 | 2.99e-03 | 1.0e-02 | PASS |
+| V07 Timoshenko | tip deflection L/h=5 (shear part 2.3%) | 7.31317e-05 | 7.31429e-05 | 1.53e-04 | 5.0e-03 | PASS |
+| V07 Timoshenko | tip deflection L/h=100 (shear part 0.0%) | 0.571374 | 0.571463 | 1.56e-04 | 5.0e-03 | PASS |
+| V08 shear correction | homogeneous k_x (energy method) | 0.833333 | 0.833333 | 1.33e-16 | 1.0e-12 | PASS |
+| V08 sandwich | tip deflection, k energy (k=0.066) | 0.00635089 | 0.00636428 | 2.10e-03 | 2.0e-02 | PASS |
+| V08 sandwich | tip deflection, k = 5/6 (wrong for sandwich) | 0.00452519 | 0.00636428 | 2.89e-01 | - | info |
+| V09 Newmark | energy drift, undamped free vibration | 7.73381e-13 | 0 | 7.73e-13 | 1.0e-09 | PASS |
+| V09 Newmark | step response vs modal superposition (max err) | 0.00567666 | 0 | 5.68e-03 | 1.0e-02 | PASS |
+| V09 Newmark | dynamic amplification factor (undamped step) | 1.97901 | 2 | 1.05e-02 | 2.0e-02 | PASS |
+| V10 wing modes | 1B frequency, plate vs Timoshenko beam [Hz] | 30.9311 | 30.7328 | 6.45e-03 | 3.0e-02 | PASS |
+| V10 wing modes | 1B mode-shape MAC vs beam | 0.999996 | 1 | 4.26e-06 | 1.0e-02 | PASS |
+| V10 wing modes | 2B frequency, plate vs Timoshenko beam [Hz] | 162.676 | 161.916 | 4.69e-03 | 3.0e-02 | PASS |
+| V10 wing modes | 2B mode-shape MAC vs beam | 0.999984 | 1 | 1.60e-05 | 1.0e-02 | PASS |
+| V10 wing modes | 3B frequency, plate vs Timoshenko beam [Hz] | 378.864 | 377.095 | 4.69e-03 | 3.0e-02 | PASS |
+| V10 wing modes | 3B mode-shape MAC vs beam | 0.999985 | 1 | 1.53e-05 | 1.0e-02 | PASS |
+| V10 wing modes | 4B frequency, plate vs Timoshenko beam [Hz] | 618.11 | 614.286 | 6.23e-03 | 3.0e-02 | PASS |
+| V10 wing modes | 4B mode-shape MAC vs beam | 0.999982 | 1 | 1.80e-05 | 1.0e-02 | PASS |
+| V10 wing modes | 5B frequency, plate vs Timoshenko beam [Hz] | 866.213 | 858.898 | 8.52e-03 | 3.0e-02 | PASS |
+| V10 wing modes | 5B mode-shape MAC vs beam | 0.99997 | 1 | 2.95e-05 | 1.0e-02 | PASS |
+| V10 wing modes | 1T frequency, plate vs Reissner strip torsion [Hz] | 157.294 | 157.175 | 7.63e-04 | 3.0e-02 | PASS |
+| V10 wing modes | 1T mode-shape MAC vs sin(pi x/2L) | 0.999996 | 1 | 4.11e-06 | 1.0e-02 | PASS |
+| V10 wing modes | 1T Kirchhoff torsion (no shear) [Hz] (Reissner factor 0.427) | 157.294 | 240.525 | 3.46e-01 | - | info |
+| V11 modal response | tip deflection, 8-mode FOH vs Newmark (max err) | 0.000285492 | 0 | 2.85e-04 | 1.0e-02 | PASS |
+| V11 modal response | tip acceleration, 8-mode FOH vs Newmark (max err) | 0.000411282 | 0 | 4.11e-04 | 5.0e-02 | PASS |
+| V11 modal response | modal solver time [s] (401 steps) | 0.062709 | 0 | 6.27e-02 | - | info |
