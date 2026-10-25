@@ -23,3 +23,53 @@
 
 [3] PI-NET - physics-informed multi-task damage network
   inputs: 123 (117 healthy-whitened features + 6 family novelty indices); records train/val/test 5877/1260/1257
+  architecture 123-[64 64]-heads(7+1+400+1+1), 38747 parameters; trained 67 epochs (best 27) in 50 s
+  learned evidence-prior gain a = 0.48
+
+  TEST SET - detection (AUC healthy vs class; detection rate at 1 % false alarms)
+  method                          debond skin matrix skin fiber core crush     delam root loosening      FA
+  Mahalanobis: MSE index            0.95      0.70      0.80      0.90      0.48      0.62    3.4%
+  Mahalanobis: all physics          0.93      0.72      0.87      0.87      0.49      0.61    5.1%
+  PI-Net (1 - p_healthy)            0.95      0.73      0.88      0.89      0.48      0.64    0.6%
+  detection rate @1% FA:
+  Mahalanobis: MSE index             82%       22%       49%       68%        2%       16%
+  PI-Net                             81%       23%       62%       57%        0%       13%
+
+  TEST SET - 7-class diagnosis: accuracy 0.366, macro-F1 0.355 (chance 0.143)
+  per-class F1: healthy 0.32  debond 0.62  skin matrix 0.22  skin fiber 0.59  core crush 0.20  delam 0.21  root loosening 0.33  
+
+  TEST SET - localisation of significant damage (D > 0.5, r > 30 mm): median error / hit < 50 mm
+  class           M4 rule (60 FBG)   PI-Net (60 FBG)   M4 rule (dense)    PI-Net (dense)
+  debond               136 mm   18%       134 mm    9%        66 mm   33%        87 mm   26%
+  skin matrix           76 mm   39%       102 mm   31%        25 mm   59%        48 mm   52%
+  skin fiber            40 mm   75%        34 mm   76%         6 mm   98%         8 mm   95%
+  core crush           232 mm    5%        94 mm   16%       203 mm    5%        85 mm   24%
+  damaged face (skin + delamination classes, test): accuracy 0.68
+  damage extent (sum D / 5): R2 0.05, Spearman rho 0.28
+  residual strength RF_min: RMSE 0.80 (R2 0.17); clearly weakened wings (n = 33): RMSE 2.23
+  physics consistency: decoded-vs-measured residual 1.412 (no-damage prediction: 1.799)
+
+[4] ABLATION - evidence-map prior (test set, lambda = 0.3)
+  variant                   acc   mAUC  loc hit   median loc error (mm) debond/matrix/fibre/crush
+  no prior                0.355  0.755      11%     120   150    87    83 
+  FBG evidence prior      0.366  0.761      33%     134   102    34    94 
+  dense evidence prior    0.375  0.757      49%      87    48     8    85 
+
+[5] PHYSICS LOSS x LABELLED FRACTION (semi-supervised; unlabelled wings only feel the physics loss)
+  labelled     5%  lambda 0.0 : acc 0.277  macro-F1 0.274  mean AUC 0.670  loc 123 mm  phys residual 1.664
+  labelled     5%  lambda 0.3 : acc 0.276  macro-F1 0.276  mean AUC 0.664  loc 120 mm  phys residual 1.526
+  labelled     5%  lambda 1.0 : acc 0.280  macro-F1 0.280  mean AUC 0.670  loc 123 mm  phys residual 1.462
+  labelled    20%  lambda 0.0 : acc 0.340  macro-F1 0.334  mean AUC 0.727  loc 101 mm  phys residual 1.651
+  labelled    20%  lambda 0.3 : acc 0.334  macro-F1 0.326  mean AUC 0.729  loc 105 mm  phys residual 1.462
+  labelled    20%  lambda 1.0 : acc 0.331  macro-F1 0.322  mean AUC 0.728  loc 107 mm  phys residual 1.429
+  labelled   100%  lambda 0.0 : acc 0.354  macro-F1 0.351  mean AUC 0.759  loc  91 mm  phys residual 1.509
+  labelled   100%  lambda 0.3 : acc 0.362  macro-F1 0.351  mean AUC 0.759  loc  93 mm  phys residual 1.414
+  labelled   100%  lambda 1.0 : acc 0.362  macro-F1 0.356  mean AUC 0.755  loc  93 mm  phys residual 1.384
+
+[6] HYBRID PHYSICS-AI SURROGATE (design tier: layup, thicknesses, core, material, taper, sweep, root)
+  reduced-order model for 400 designs in 3.2 s (FE: 9 s per design)
+  output        median FE/model          corr(log)
+  f_1B                    1.004              0.981
+  f_1T                    0.750              0.904
+  w_tip(1g)               0.984              0.991
+  RF_TsaiWu               0.964              0.983
