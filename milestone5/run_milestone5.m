@@ -110,7 +110,7 @@ fig = new_fig(800, 380);
 plot(hist.train, 'b-', 'LineWidth', 1.3); hold on; plot(hist.val, 'r-', 'LineWidth', 1.3);
 plot(hist.best_epoch, hist.val(hist.best_epoch), 'ko', 'MarkerSize', 9, 'LineWidth', 2);
 xlabel('epoch'); ylabel('objective (supervised + \lambda physics + L2)'); grid on;
-legend('training (noisy inputs)', 'validation', 'selected', 'Location', 'northeast');
+legend({'training (noisy inputs)', 'validation', 'best epoch'}, 'Location', 'northeast');
 title('PI-Net training history');
 save_fig(fig, 'M5_training_curves');
 
@@ -150,7 +150,7 @@ save_fig(fig, 'M5_confusion');
 fig = new_fig(1000, 400);
 bar([AUCb(:,2:end); M.auc(2:end)]'); hold on; plot([0.5 nc-0.5], [0.5 0.5], 'k:');
 set(gca, 'XTickLabel', cn(2:end)); ylim([0.4 1]); ylabel('test AUC'); grid on;
-legend('Mahalanobis: MSE index (M4)', 'Mahalanobis: all features (M4)', 'PI-Net', 'Location', 'northeast');
+legend({'Mahalanobis: MSE index (M4)', 'Mahalanobis: all features (M4)', 'PI-Net'}, 'Location', 'northeast');
 title('Damage detection: unsupervised physics features vs physics-informed network');
 save_fig(fig, 'M5_detection_auc');
 
@@ -351,7 +351,7 @@ for k = 1:4
     lim = [min(Yd(ted,k)) max(Yd(ted,k))]; plot(lim, lim, 'k--'); grid on; axis square;
     xlabel(['FE ' plab{k}]); ylabel('surrogate'); title(plab{k});
 end
-legend('pure NN', 'hybrid', 'Location', 'northwest');
+legend({'pure NN', 'hybrid'}, 'Location', 'northwest');
 save_fig(fig, 'M5_surrogate_parity');
 
 %% 7. Save models ---------------------------------------------------------------
