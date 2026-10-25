@@ -11,7 +11,7 @@ addpath(fileparts(fileparts(mfilename('fullpath'))));   % project root, whatever
 root = setup_paths();
 tests = {@val01_element_rank, @val02_patch_test, @val03_navier_static, ...
          @val04_navier_modal, @val05_shear_locking, @val06_leissa_cantilever, ...
-         @val07_timoshenko_beam, @val08_sandwich_shear, @val09_newmark, @val10_wing_modes_beam, @val11_modal_response};
+         @val07_timoshenko_beam, @val08_sandwich_shear, @val09_newmark, @val10_wing_modes_beam, @val11_modal_response, @val12_ai_components};
 R = [];
 for i = 1:numel(tests)
     t0 = tic;

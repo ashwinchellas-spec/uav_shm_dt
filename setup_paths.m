@@ -9,6 +9,7 @@ addpath(fullfile(root, 'milestone1'));
 addpath(fullfile(root, 'milestone2'));
 addpath(fullfile(root, 'milestone3'));
 addpath(fullfile(root, 'milestone4'));
+addpath(fullfile(root, 'milestone5'));
 if ~exist(fullfile(root, 'results', 'figures'), 'dir'), mkdir(fullfile(root, 'results', 'figures')); end
 if ~exist(fullfile(root, 'results', 'data'), 'dir'),    mkdir(fullfile(root, 'results', 'data'));    end
 if exist('OCTAVE_VERSION', 'builtin') && isempty(getenv('DISPLAY'))
